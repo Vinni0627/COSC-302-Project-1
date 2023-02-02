@@ -49,9 +49,9 @@ int main(char *argv[]){
 
     string data = sout.str();
     sin.str(data);
-    
+    string *details;
     while(true){
-        string *details = new string[6];  // [Title, Time, Artist, Album, Genre, Track]
+        details = new string[6];  // [Title, Time, Artist, Album, Genre, Track]
         for(int i=0; i<5; i++){
             getline(sin, details[i], ' ');
             details[i] = fixString(details[i]);
@@ -59,52 +59,56 @@ int main(char *argv[]){
         getline(sin, details[5],'\n');
         details[5] = fixString(details[5]);
         
-        
-        Artist newArtist;
+        /*Artist newArtist;
         Album newAlbum;
         Song newSong;
 
-        newArtist.name = details[2];
-        newAlbum.name = details[3];
-        newSong.title = details[0];
-        string min = details[1].substr(0, details[1].find(':'));
-        string seconds = details[1].substr(details[1].find(':')+1, 2);
-        int songtime = stoi(min)*60 + stoi(seconds);
-        newSong.time = songtime;
-        newAlbum.songs[0] = newSong;
-        newAlbum.nsongs++;
-        newArtist.albums[details[3]] = newAlbum;
-        artists[details[2]] = newArtist;
+        auto artist_it = artists.find(details[2]); // checks to see if the artist already exists
 
-        map<string, Artist>::iterator itr_artist = artists.find(details[2]);
-        if (itr_artist == artists.end()) {
+        if(artist_it == artists.end()){ // artist doesn't exist
 
-        } else {
-            Artist artist = itr_artist->second;
-            map<string, Album>::iterator itr_album = artist.albums.find(albumName);
-            if (itr_album == artist.albums.end()) {
-                newAlbum.name = albumName;
-                newSong.title = songTitle;
-                newSong.time = songTime;
-                newAlbum.songs[0] = newSong;
-                newAlbum.nsongs = 1;
-                artist.albums[albumName] = newAlbum;
-                artists[artistName] = artist;
-            } else {
-                Album album = itr_album->second;
-                newSong.title = songTitle;
-                newSong.time = songTime;
-                album.songs[album.nsongs++] = newSong;
-                artist.albums[albumName] = album;
-                artists[artistName] = artist;
+            newArtist = artist_it->second;
+            map<string, Album> cur_albums = newArtist.albums;
+            auto album_it = cur_albums.find(details[3]); // checks to see if the album already exists
+
+            if(album_it == cur_albums.end()){ // album doesn't exist
+
+
             }
-}
 
+
+
+        }*/
+
+        for(auto artist_itr = artists.begin(); artist_itr != artists.end(); artist_itr++){
+            
+            Artist cur_Artist = artist_itr->second;
+
+            cout << details[2];            
+            for(auto album_itr = cur_Artist.albums.begin(); album_itr != cur_Artist.end();album_itr++){
+
+                Album cur_album = album_itr->second;
+
+                cout << "\t" << details[3];
+                for(auto song_itr = cur_album.songs.begin(); song_itr != cur_album.end(); song_itr++){
+                    Song cur_song = song_itr->second;
+
+                    cout << "\t\t" << detail[0] << "\t" << detail[1];
+
+                }
+            }
+                
+
+        }
+
+
+
+        
 
 
 
         delete details;
     }
-
 }
+
 
