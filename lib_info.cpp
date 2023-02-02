@@ -10,9 +10,9 @@ using namespace std;
 
 // Issues: Time issue and all songs are not printing
 
-void fixString(char text[]){
+void fixString(string &text){
 
-    for (int i = 0; text[i] != '\0'; i++) {
+    for (int i = 0; i< text.length(); i++) {
         if (text[i] == '_') {
             text[i] = ' ';
         }
@@ -27,28 +27,28 @@ string convertTime(int seconds){
     min = seconds / 60;
     string secs = to_string(sec);
     if(sec < 10){
-        secs = "0" + secs;
+        secs = '0' + secs;
     }
-    string finale = to_string(min) +":"+ secs;
+    string finale = to_string(min) +':'+ secs;
     return finale;
 }
 
 
 struct Song { 
-    string title;
-    int time = 0;  // could also be a string
+    string title = "";
+	int time = 0;  // could also be a string
 };
 
 struct Album {
     map <int, Song > songs;
-    string name;
+    string name = "";
     int time = 0;
     int nsongs = 0;  // optional variable but makes it easier
 };
 
 struct Artist {
     map <string, Album> albums;
-    string name;
+    string name = "";
     int time = 0;
     int nsongs = 0;
 };
@@ -61,6 +61,7 @@ int main(int argc, char** argv){
 
     int min, seconds, track;
     char title[100], artist[100], album[100], genre[100];
+	string stitle = "", sartist = "",salbum = "";
     string line;
     ifstream infile;
 
@@ -74,66 +75,66 @@ int main(int argc, char** argv){
 
         time = min*60 + seconds;
         //cout << "TIME" << time << "TIMEEND";
+		stitle = title;
+		sartist = artist;
+		salbum = album;
 
-        fixString(title);
-        fixString(artist);
-        fixString(album);
+        fixString(stitle);
+        fixString(sartist);
+        fixString(salbum);
 
 
         Artist newArtist;
         Album newAlbum;
         Song newSong;
 
-        newSong.title = title;
+        newSong.title = stitle;
 
         newSong.time = time;
         //cout << "Song" << newSong.time << endl;
 
-        auto artist_itr = artists.find(artist);
+        auto artist_itr = artists.find(sartist);
 
         if(artist_itr == artists.end()){ // artist not found // new everything
-            newArtist.name = artist;
+            newArtist.name = sartist;
             newArtist.nsongs++;
             newArtist.time += time;
-            //cout << "ARTIST" << newArtist.time << endl;
 
 
-            newAlbum.name = album;
+            newAlbum.name = salbum;
             newAlbum.nsongs++;
             newAlbum.time += time;
-            //cout << "Album" << newAlbum.time << endl; 
+ 
             
             newAlbum.songs.insert(pair<int, Song>(track, newSong)); // new song added
-            newArtist.albums.insert(pair<string, Album>(album, newAlbum)); // new album added
-            artists.insert(pair<string, Artist>(artist, newArtist)); // new artist added
+            newArtist.albums.insert(pair<string, Album>(salbum, newAlbum)); // new album added
+            artists.insert(pair<string, Artist>(sartist, newArtist)); // new artist added
 
 
         } else { // artist found
-            newArtist = artist_itr->second;
 
-            newArtist.nsongs++;
-            newArtist.time += time;
+            artist_itr->second.nsongs++;
+            artist_itr->second.time += time;
             
 
-            auto album_itr = newArtist.albums.find(album);
-            if(album_itr == newArtist.albums.end()){ // album not found
-                newAlbum.name = album;
+            auto album_itr = artist_itr->second.albums.find(salbum);
+            if(album_itr == artist_itr->second.albums.end()){ // album not found
+                newAlbum.name = salbum;
                 newAlbum.nsongs++;
                 newAlbum.time += time;
                 
                 newAlbum.songs.insert(pair<int, Song>(track, newSong)); // new song added
-                newArtist.albums.insert(pair<string, Album>(album, newAlbum)); // new album added
+                artist_itr->second.albums.insert(pair<string, Album>(salbum, newAlbum)); // new album added
 
 
 
             }else { // album found
-                newAlbum = album_itr->second;
 
 
-                newAlbum.nsongs++;
-                newAlbum.time += time;
+                album_itr->second.nsongs++;
+                album_itr->second.time += time;
 
-                newAlbum.songs.insert(pair<int, Song>(track, newSong)); // new song added
+                album_itr->second.songs.insert(pair<int, Song>(track, newSong)); // new song added
             }
 
         }
@@ -143,20 +144,18 @@ int main(int argc, char** argv){
     }
 
         for(auto artist = artists.begin();artist != artists.end();artist++){
-            cout << artist->second.name << ": " << artist->second.nsongs << ", " << convertTime(artist->second.time) << endl;
-            //cout << "SIZE" << artist.second.albums.size() << "SIZEEND"<< endl;
-            for(auto album = artist->second.albums.begin(); album != artist->second.albums.end();album++){
-                cout << "\t" << album->second.name << ": " << album->second.nsongs << ", " << convertTime(album->second.time) << endl;
+            //cout << artist->second.name << ": " << artist->second.nsongs << ", " << convertTime(artist->second.time) << endl;
+			printf("%s: %d, %s\n", artist->second.name.c_str(), artist->second.nsongs,convertTime(artist->second.time).c_str());            
+            for(auto album = artist->second.albums.begin();album !=artist->second.albums.end();album++){
+                //cout << "        "<< album->second.name << ": " << album->second.nsongs << ", " << convertTime(album->second.time) << endl;
+				printf("        %s: %d, %s\n", album->second.name.c_str(), album->second.nsongs, convertTime(album->second.time).c_str());
                 for(auto song = album->second.songs.begin();song != album->second.songs.end();song++){
-                    cout << "\t\t" << song->first << ". " << song->second.title << ": " << convertTime(song->second.time) << endl;
-                }
+                    //cout << "                  " << song->first << ". " << song->second.title << ": " << convertTime(song->second.time) << endl;
+					printf("                %d. %s: %s\n", song->first, song->second.title.c_str(), convertTime(song->second.time).c_str());
+				}
             }
-
         }
-
-
-    /*for (auto it = artists.begin(); it != artists.end(); it++) {
-        cout << it->first << ": " << time << endl;
-    }*/
+		
+	infile.close();	
     return 0;
 }
