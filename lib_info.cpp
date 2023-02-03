@@ -60,7 +60,7 @@ struct Artist {
 int main(int argc, char** argv){
 
     int min, seconds, track;
-    char title[100], artist[100], album[100], genre[100];
+    char title[150], artist[150], album[150], genre[100];
 	string stitle = "", sartist = "",salbum = "";
     string line;
     ifstream infile;
@@ -159,3 +159,4 @@ int main(int argc, char** argv){
 	infile.close();	
     return 0;
 }
+
