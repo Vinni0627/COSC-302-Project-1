@@ -1,4 +1,4 @@
-Project 1 Report: Vinneeth Konjeti and Amal Sam 
+Project 1 Report: Vineeth Konjeti and Amal Sam 
 
 command used: g++ -std=c++11 -o lab_info lab_info.cpp
 
@@ -9,4 +9,5 @@ link: https://github.com/Vinni0627/COSC-302-Project-1/tree/main
 Report:
 The project overall went smoothly and both sides worked collaboratively.
 Any issues that arose we sat down as a team and tried different methods to
-fix the issue. 
+fix the issue. Most of the work was done on Vineeth's laptop but Amal was advising
+right next to him.
