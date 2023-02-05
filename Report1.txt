@@ -1,0 +1,8 @@
+Project 1 Report: Vinneeth Konjeti and Amal Sam 
+
+command used: g++ -std=c++11 -o lab_info lab_info.cpp
+
+Report:
+The project overall went smoothly and both sides worked collaboratively.
+Any issues that arose we sat down as a team and tried different methods to
+fix the issue. 
