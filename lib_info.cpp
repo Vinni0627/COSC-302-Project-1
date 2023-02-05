@@ -1,3 +1,9 @@
+// Vineeth Konjeti and Amal Sam - CS302 - 02/03/23 [PROJECT 1]
+/* Description: Program organizes a given list of artists, their albums, the album's contents (songs),
+number of songs, and the time for both the album and each song.
+*/
+
+
 #include <iostream>
 #include <string>
 #include <cstdio>
@@ -10,7 +16,7 @@ using namespace std;
 
 // Issues: Time issue and all songs are not printing
 
-void fixString(string &text){
+void fixString(string &text){ // Removes underscores in input file to creates spaces
 
     for (int i = 0; i< text.length(); i++) {
         if (text[i] == '_') {
@@ -21,7 +27,7 @@ void fixString(string &text){
     
 }
 
-string convertTime(int seconds){
+string convertTime(int seconds){ // Function to coverts seconds to minutes and seconds
     int min, sec;
     sec = seconds %60;
     min = seconds / 60;
@@ -36,7 +42,7 @@ string convertTime(int seconds){
 
 struct Song { 
     string title = "";
-	int time = 0;  // could also be a string
+	int time = 0;  
 };
 
 struct Album {
@@ -55,12 +61,10 @@ struct Artist {
 
 
 
-
-
-int main(int argc, char** argv){
+int main(int argc, char** argv){ 
 
     int min, seconds, track;
-    char title[150], artist[150], album[150], genre[100];
+    char title[150], artist[150], album[150], genre[100]; // allocating space for char arrays
 	string stitle = "", sartist = "",salbum = "";
     string line;
     ifstream infile;
@@ -69,12 +73,11 @@ int main(int argc, char** argv){
     map<string, Artist> artists;
     int time = 0;
 
-    while (getline(infile, line))
+    while (getline(infile, line)) // reads input files
     {
         sscanf(line.c_str(), "%s %d:%d %s %s %s %d", title, &min, &seconds, artist, album, genre, &track);
 
         time = min*60 + seconds;
-        //cout << "TIME" << time << "TIMEEND";
 		stitle = title;
 		sartist = artist;
 		salbum = album;
@@ -88,10 +91,9 @@ int main(int argc, char** argv){
         Album newAlbum;
         Song newSong;
 
-        newSong.title = stitle;
+        newSong.title = stitle; // converting from char array to a string for easier use
 
         newSong.time = time;
-        //cout << "Song" << newSong.time << endl;
 
         auto artist_itr = artists.find(sartist);
 
@@ -142,15 +144,12 @@ int main(int argc, char** argv){
 
         
     }
-
-        for(auto artist = artists.begin();artist != artists.end();artist++){
-            //cout << artist->second.name << ": " << artist->second.nsongs << ", " << convertTime(artist->second.time) << endl;
+        /* Printing out artists and their respective albums and their songs(and times)*/
+        for(auto artist = artists.begin();artist != artists.end();artist++) { 
 			printf("%s: %d, %s\n", artist->second.name.c_str(), artist->second.nsongs,convertTime(artist->second.time).c_str());            
             for(auto album = artist->second.albums.begin();album !=artist->second.albums.end();album++){
-                //cout << "        "<< album->second.name << ": " << album->second.nsongs << ", " << convertTime(album->second.time) << endl;
 				printf("        %s: %d, %s\n", album->second.name.c_str(), album->second.nsongs, convertTime(album->second.time).c_str());
                 for(auto song = album->second.songs.begin();song != album->second.songs.end();song++){
-                    //cout << "                  " << song->first << ". " << song->second.title << ": " << convertTime(song->second.time) << endl;
 					printf("                %d. %s: %s\n", song->first, song->second.title.c_str(), convertTime(song->second.time).c_str());
 				}
             }
@@ -159,4 +158,3 @@ int main(int argc, char** argv){
 	infile.close();	
     return 0;
 }
-
